@@ -10,8 +10,9 @@ import { CartService } from './cart.service';
   providedIn: 'root'
 })
 export class AuthService {
+  User: firebase.Unsubscribe;
 
-  constructor(private firebaseAuth: AngularFireAuth,
+  constructor(public firebaseAuth: AngularFireAuth,
               public carService: CartService,
               public route: Router) { this.user = firebaseAuth.authState; }
   user: Observable<firebase.User>;
@@ -21,26 +22,17 @@ export class AuthService {
   public database: any;
   public ref: any;
   public data: any;
-  newUser = null;
-
-  mydatabase() {
-    this.database = firebase.database();
-    this.ref = this.database.ref('user');
-
-    this.data = this.carService.items;
-    this.ref.push(this.data);
-  }
+  public newUser = null;
 
   public signup(email: string, password: string) {
     this.message = { text : 'validating...'};
     this.firebaseAuth
       .auth
       .createUserWithEmailAndPassword(email, password)
-      .then(value => {
-        this.newUser = 'vc';
+      .then(user => {
         this.message = { text : ''};
         this.route.navigate(['/shop']);
-        console.log('Success!', value);
+        console.log('Success!', user);
       })
       .catch(err => {
         this.message = { text : 'the server is experiencing some technical errors,please check on your connectivity'};
@@ -55,7 +47,6 @@ export class AuthService {
       .auth
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
-        this.newUser = user;
         if (user) {
           this.route.navigate(['/shop']); }
       })
@@ -72,6 +63,15 @@ export class AuthService {
       .signOut();
     this.route.navigate(['/home']);
   }
+  definEser() {
 
+  this.User = this.firebaseAuth.auth.onAuthStateChanged(user => {
+    console.log( user, 'uu' );
+
+    return this.newUser = 1;
+  });
+  console.log(this.newUser, 'NEWNEWNEW', this.newUser, 'newewe' ) ;
+
+  }
 }
 
