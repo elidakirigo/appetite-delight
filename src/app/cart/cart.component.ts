@@ -24,8 +24,9 @@ export class CartComponent implements OnInit {
    };
 
  addCart() {
-   this.items = this.cartService.items;
-   console.log(this.items);
+   this.items = this.cartService.newProduct;
+   console.log(typeof this.items);
+   return this.items;
 
  }
  remove() {
